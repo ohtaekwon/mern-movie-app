@@ -6,9 +6,6 @@
   "description": "",
   "main": "index.js",
   "licenses": "MIT",
-  "scripts": {
-    "start": "nodemon ./index.js"
-  },
   "license": "ISC",
   "dependencies": {
     "axios": "^1.3.5",
@@ -20,5 +17,8 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.3",
     "nodemon": "^2.0.22"
+  },
+  "scripts": {
+    "start": "nodemon ./index.js"
   }
 }

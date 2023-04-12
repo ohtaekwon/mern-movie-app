@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import modelOptions from "./model.options";
+import modelOptions from "./model.options.js";
 
 /**
  * @description mongoose 패키지를 사용하여 MongoDB 데이터베이스의 Review 스키마를 정의하고 모델로 컴파일합니다.

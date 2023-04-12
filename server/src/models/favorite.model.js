@@ -18,7 +18,7 @@ export default mongoose.model(
       // mongoose의 스키마를 정의
       user: {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: "User", // User model을 참조
         required: true,
       },
       mediaType: {
