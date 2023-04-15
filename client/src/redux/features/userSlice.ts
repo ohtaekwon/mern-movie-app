@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 /**
  * @description Redux Toolkit을 사용하여 user와 listFavorites를 포함하는 초기 상태와 함께 userSlice라는 Redux slice를 생성합니다.
  * @argument name createSlice 함수의 첫 번째 매개변수는 slice의 이름으로 "User"
- * @argument slice slice의 초기 상태를 나타내는 객체입니다. 이 slice는 user와 listFavorites를 포함합니다.
+ * @argument initialState slice의 초기 상태를 나타내는 객체입니다. 이 slice는 user와 listFavorites를 포함합니다.
  * @argument reducers slice에서 사용할 reducer 함수를 정의하는 객체입니다.
  *
  * @description slice의 action creators으로 각각 유저 정보를 설정하거나, 즐겨찾기 목록을 업데이트하고, 즐겨찾기를 추가하거나 제거하는 역할을 합니다.
@@ -16,21 +16,20 @@ import { createSlice } from "@reduxjs/toolkit";
  * @default userSlice.reducer 생성된 reducer 함수를 반환합니다.
  *
  */
-type InitialStateType = {
+
+const initialState = {
+  user: null,
+  listFavorites: [],
+} as {
   user: null;
   listFavorites: {
     mediaId: string;
   }[];
 };
 
-const initialState = {
-  user: null,
-  listFavorites: [],
-};
-
 export const userSlice = createSlice({
   name: "User",
-  initialState: initialState as InitialStateType,
+  initialState: initialState,
   reducers: {
     setUser: (state, action) => {
       if (action.payload === null) {
