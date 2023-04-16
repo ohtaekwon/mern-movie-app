@@ -1,5 +1,5 @@
 import axios from "axios";
-import querytring from "query-string";
+import queryString from "query-string";
 
 const basePath = "http://127.0.0.1:8000/api/v1/";
 
@@ -7,7 +7,7 @@ const privateClient = axios.create({
   baseURL: basePath,
   // paramsSerializer는 params를 직렬화하는 옵션 함수
   paramsSerializer: {
-    encode: (params) => querytring.stringify(params),
+    encode: (params) => queryString.stringify(params),
   },
 });
 

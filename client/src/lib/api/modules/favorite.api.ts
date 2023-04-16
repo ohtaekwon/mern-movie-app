@@ -9,7 +9,7 @@ const favoriteApiRoutes = {
 };
 
 const favoriteApis = {
-  getList: async ({ mediaType }: { mediaType: "tv" | "movie" }) => {
+  getList: async () => {
     try {
       const response = await privateClient.get(favoriteApiRoutes.list);
       return { response };

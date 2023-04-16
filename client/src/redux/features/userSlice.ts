@@ -6,7 +6,7 @@ import { createSlice } from "@reduxjs/toolkit";
  * @argument initialState slice의 초기 상태를 나타내는 객체입니다. 이 slice는 user와 listFavorites를 포함합니다.
  * @argument reducers slice에서 사용할 reducer 함수를 정의하는 객체입니다.
  *
- * @description slice의 action creators으로 각각 유저 정보를 설정하거나, 즐겨찾기 목록을 업데이트하고, 즐겨찾기를 추가하거나 제거하는 역할을 합니다.
+ * @description reducers는 slice의 action creators으로 각각 유저 정보를 설정하거나, 즐겨찾기 목록을 업데이트하고, 즐겨찾기를 추가하거나 제거하는 역할을 합니다.
  * @method setUser  state.user 값을 업데이트, localStorage에 사용자의 인증 토큰을 저장하거나 삭제합니다.
  * @method setListFavorites state.listFavorites 값을 업데이트합니다.
  * @method addFavorite addFavorite reducer는 state.listFavorites 배열의 앞부분에 action.payload를 추가합니다.
@@ -17,11 +17,18 @@ import { createSlice } from "@reduxjs/toolkit";
  *
  */
 
+type UserInfo = {
+  username: string;
+  displayName: string;
+  password: string;
+  salt: string;
+};
+
 const initialState = {
   user: null,
   listFavorites: [],
 } as {
-  user: null;
+  user: UserInfo | null;
   listFavorites: {
     mediaId: string;
   }[];
@@ -57,7 +64,13 @@ export const userSlice = createSlice({
   },
 });
 
+/**
+ * @description userSlice.actions 객체 내부의 setUser, setListFavorites, addFavorite, removeFavorite 함수를 추출하여 새로운 상수 변수에 할당하도록 한다.
+ */
 export const { setUser, setListFavorites, addFavorite, removeFavorites } =
   userSlice.actions;
 
+/**
+ *@description slice에서 생성된 Reducer함수들을 외부에서 사용하도록 내보낸다. Redux의 Store에서 사용하도록 한다.
+ */
 export default userSlice.reducer;
