@@ -1,6 +1,6 @@
 import jsonwebtoken from "jsonwebtoken";
 import responseHandler from "../handlers/response.handler.js";
-import userModel from "../models/model.options.js";
+import userModel from "../models/user.model.js";
 import "dotenv/config";
 
 const tokenDecode = (req) => {
@@ -9,7 +9,6 @@ const tokenDecode = (req) => {
 
     if (bearerHeader) {
       const token = bearerHeader.split(" ")[1];
-
       return jsonwebtoken.verify(token, process.env.TOKEN_SECRET);
     }
     return false;
