@@ -11,3 +11,16 @@ export interface MediaResponse {
 export interface GenresResponse {
   genres: GenresType[];
 }
+
+export interface MediaDetailResponse extends MediaType {
+  backdrop_path: string;
+  belong_to_collection: {
+    id: number;
+    name: string;
+    poster_path: string;
+  };
+  budget: number;
+  credits: any;
+  genres: { id: number; name: string }[];
+  isFavorite: boolean;
+}

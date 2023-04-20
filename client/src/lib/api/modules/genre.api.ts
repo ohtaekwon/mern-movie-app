@@ -1,5 +1,6 @@
 import publicClient from "../client/public.client";
 import { handleError } from "../utils/helpers";
+import { GenresResponse } from "./index.types";
 
 const genreApiRoutes = {
   list: ({ mediaType }: { mediaType: "tv" | "movie" }) => `${mediaType}/genres`,
@@ -8,9 +9,10 @@ const genreApiRoutes = {
 const genreApis = {
   getList: async ({ mediaType }: { mediaType: "tv" | "movie" }) => {
     try {
-      const response = await publicClient.get(
+      const response: GenresResponse = await publicClient.get(
         genreApiRoutes.list({ mediaType })
       );
+
       return { response };
     } catch (error) {
       const { code, message } = handleError(error);
@@ -18,5 +20,4 @@ const genreApis = {
     }
   },
 };
-
 export default genreApis;

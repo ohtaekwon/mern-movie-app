@@ -15,14 +15,13 @@ const privateClient = axios.create({
  1. 요청 인터셉터 (2개의 콜백 함수를 받습니다.)
  */
 privateClient.interceptors.request.use(
-  async (config) => {
-    const headers = {
-      "Content-type": "application/json;charset=UTF-8",
-      Authorization: `Bearer ${localStorage.getItem("actkn")}`,
-    };
+  async (config: any) => {
     return {
       ...config,
-      ...headers,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("tkflix")}`,
+      },
     };
   },
   (error) => {

@@ -1,6 +1,7 @@
 import publicClient from "../client/public.client";
 import privateClient from "../client/private.client";
 import { handleError } from "../utils/helpers";
+import { MediaResponse } from "./index.types";
 
 const mediaApiRoutes = {
   list: ({
@@ -10,13 +11,13 @@ const mediaApiRoutes = {
   }: {
     mediaType: "movie" | "tv" | "people";
     mediaCategory: string;
-    page: string;
+    page: number;
   }) => `${mediaType}/${mediaCategory}?page=${page}`,
   detail: ({
     mediaType,
     mediaId,
   }: {
-    mediaType: "movie" | "tv" | "people";
+    mediaType: "movie" | "tv";
     mediaId: string;
   }) => `${mediaType}/detail/${mediaId}`,
   search: ({
@@ -36,12 +37,12 @@ const mediaApis = {
     mediaCategory,
     page,
   }: {
-    mediaType: "movie" | "tv" | "people";
-    mediaCategory: string;
-    page: string;
+    mediaType: "movie" | "tv";
+    mediaCategory: "popular" | "top_rated";
+    page: number;
   }) => {
     try {
-      const response = await publicClient.get(
+      const response: MediaResponse = await publicClient.get(
         mediaApiRoutes.list({
           mediaType,
           mediaCategory,
@@ -58,11 +59,11 @@ const mediaApis = {
     mediaType,
     mediaId,
   }: {
-    mediaType: "movie" | "tv" | "people";
+    mediaType: "movie" | "tv";
     mediaId: string;
   }) => {
     try {
-      const response = await privateClient.get(
+      const response: any = await privateClient.get(
         mediaApiRoutes.detail({ mediaId, mediaType })
       );
       return { response };

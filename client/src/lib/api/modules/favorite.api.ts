@@ -4,7 +4,7 @@ import { handleError } from "../utils/helpers";
 const favoriteApiRoutes = {
   list: "user/favorites",
   add: "user/favorites",
-  remove: ({ favoriteId }: { favoriteId: string }) =>
+  remove: ({ favoriteId }: { favoriteId: number }) =>
     `user/favorites/${favoriteId}`,
 };
 
@@ -25,11 +25,11 @@ const favoriteApis = {
     mediaPoster,
     mediaRate,
   }: {
-    mediaId: string;
+    mediaId: number;
     mediaType: "tv" | "movie";
     mediaTitle: string;
     mediaPoster: string;
-    mediaRate: string;
+    mediaRate: number;
   }) => {
     try {
       const response = await privateClient.post(favoriteApiRoutes.add, {
@@ -45,7 +45,7 @@ const favoriteApis = {
       return { error: { code, message } };
     }
   },
-  remove: async ({ favoriteId }: { favoriteId: string }) => {
+  remove: async ({ favoriteId }: { favoriteId: number }) => {
     try {
       const response = await privateClient.delete(
         favoriteApiRoutes.remove({ favoriteId })
