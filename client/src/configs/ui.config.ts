@@ -22,10 +22,7 @@ const uiConfigs = {
           "linear-gradient(to right, rgba(245,245,245,1), rgba(0,0,0,0))",
       },
     },
-    typoLines: (
-      lines: CSSProperties["WebkitLineClamp"],
-      textAlign: CSSProperties["textAlign"]
-    ) => ({
+    typoLines: (lines: number, textAlign?: CSSProperties["textAlign"]) => ({
       textAlign: textAlign || "justify",
       display: "-webkit-box",
       overflow: "hidden",
