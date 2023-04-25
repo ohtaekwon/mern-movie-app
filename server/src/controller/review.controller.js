@@ -39,7 +39,14 @@ const remove = async (req, res) => {
 
     if (!review) return responseHandler.notFound(res);
 
-    await review.remove();
+    await review.deleteOne();
+
+    // console.log("here", review);
+
+    /**
+     * @description Method change
+     * 기존의 remove()에서 deleteOne()으로 수정
+     */
 
     responseHandler.ok(res);
   } catch {
