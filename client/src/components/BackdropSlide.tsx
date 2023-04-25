@@ -3,9 +3,9 @@ import NavigationSwiper from "./NavigationSwiper";
 import { SwiperSlide } from "swiper/react";
 import { Box } from "@mui/material";
 import tmdbConfig from "lib/api/config/tmdb.config";
+import { BackDrop } from "types/index.types";
 
-const BackdropSlide = ({ backdrops }: { backdrops: any }) => {
-  console.log("backdrops", backdrops);
+const BackdropSlide = ({ backdrops }: { backdrops: BackDrop[] }) => {
   return (
     <NavigationSwiper>
       {[...backdrops].splice(0, 10).map((item, index) => (
