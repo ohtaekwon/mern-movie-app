@@ -17,12 +17,13 @@ import CircularRate from "./CircularRate";
 const MediaItem = ({ media, mediaType }: React.PropsWithChildren<Props>) => {
   const { listFavorites } = useSelector((state: RootState) => state.user);
 
-  const [mediaState, setMediaState] = useMultipleState({
-    title: "",
-    posterPath: "",
-    releaseDate: "",
-    rate: 0,
-  });
+  const [{ title, posterPath, releaseDate, rate }, setMediaState] =
+    useMultipleState({
+      title: "",
+      posterPath: "",
+      releaseDate: "",
+      rate: 0,
+    });
 
   React.useEffect(() => {
     setMediaState({
@@ -67,7 +68,7 @@ const MediaItem = ({ media, mediaType }: React.PropsWithChildren<Props>) => {
     >
       <Box
         sx={{
-          ...uiConfigs.style.backgroundImage(mediaState.posterPath),
+          ...uiConfigs.style.backgroundImage(posterPath),
           paddingTop: "160%",
           "&:hover .media-info": { opacity: 1, bottom: 0 },
           "&:hover .media-back-drop, &:hover .media-play-btn": { opacity: 1 },
@@ -131,9 +132,9 @@ const MediaItem = ({ media, mediaType }: React.PropsWithChildren<Props>) => {
               }}
             >
               <Stack spacing={{ xs: 1, md: 2 }}>
-                {mediaState.rate && <CircularRate value={mediaState.rate} />}
+                {rate && <CircularRate value={rate} />}
 
-                <Typography>{mediaState.releaseDate}</Typography>
+                <Typography>{releaseDate}</Typography>
 
                 <Typography
                   variant="body1"
@@ -143,7 +144,7 @@ const MediaItem = ({ media, mediaType }: React.PropsWithChildren<Props>) => {
                     ...uiConfigs.style.typoLines(1, "left"),
                   }}
                 >
-                  {mediaState.title}
+                  {title}
                 </Typography>
               </Stack>
             </Box>

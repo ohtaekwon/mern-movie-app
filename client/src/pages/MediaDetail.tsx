@@ -26,9 +26,9 @@ import PosterSlide from "components/PosterSlide";
 import BackdropSlide from "components/BackdropSlide";
 import RecommendSlide from "components/RecommendSlide";
 import MediaSlide from "components/MediaSlide";
-import publicClient from "lib/api/client/public.client";
-import axios from "axios";
 import MediaReview from "components/MediaReview";
+import MediaVideoSlide from "components/MediaVideoSlide";
+import CastSlide from "components/CastSlide";
 
 const MediaDetail = () => {
   const { mediaType, mediaId } = useParams<{
@@ -41,12 +41,13 @@ const MediaDetail = () => {
   );
   const dispatch = useDispatch();
 
-  const [detailState, setDetailState] = useMultipleState({
-    media: [],
-    isFavorite: false,
-    onRequest: false,
-    genres: [],
-  });
+  const [{ media, isFavorite, onRequest, genres }, setDetailState] =
+    useMultipleState({
+      media: [],
+      isFavorite: false,
+      onRequest: false,
+      genres: [],
+    });
 
   const videoRef = React.useRef<HTMLDivElement>(null);
 
@@ -85,10 +86,10 @@ const MediaDetail = () => {
   const onFavoriteClick = async () => {
     if (!user) return dispatch(setAuthModalOpen(true));
 
-    if (detailState.onRequest) return;
+    if (onRequest) return;
 
-    if (detailState.isFavorite) {
-      //
+    if (isFavorite) {
+      onRemoveFavorite();
       return;
     }
     setDetailState({
@@ -97,11 +98,11 @@ const MediaDetail = () => {
     });
 
     const body = {
-      mediaId: detailState.media.id as number,
-      mediaTitle: (detailState.media.title || detailState.media.name) as string,
+      mediaId: media.id as number,
+      mediaTitle: (media.title || media.name) as string,
       mediaType: mediaType!,
-      mediaPoster: detailState.media.poster_path as string,
-      mediaRate: detailState.media.vote_average as number,
+      mediaPoster: media.poster_path as string,
+      mediaRate: media.vote_average as number,
     };
 
     const { response, error } = await favoriteApis.add(body);
@@ -113,24 +114,25 @@ const MediaDetail = () => {
 
     if (error) toast.error(error.message);
     if (response) {
+      dispatch(addFavorite(response));
+
       setDetailState({
         name: "isFavorite",
         value: true,
       });
       toast.success("좋아하기 추가를 성공하였습니다.");
-      // dispatch(addFavorite())
     }
   };
 
   const onRemoveFavorite = async () => {
-    if (detailState.onRequest) return;
+    if (onRequest) return;
     setDetailState({
       name: "onRequest",
       value: true,
     });
 
     const favorite = listFavorites.find(
-      (e) => e.mediaId.toString() === detailState.media.id.toString()
+      (e) => e.mediaId.toString() === media.id.toString()
     );
     if (!favorite) return;
 
@@ -149,32 +151,28 @@ const MediaDetail = () => {
     }
   };
 
-  console.log(detailState.media);
-
-  return detailState.media ? (
+  return media ? (
     <>
-      {/* be in a backdrop_path or poster_path  */}
-      {detailState.media.backdrop_path && (
-        <ImageHeader
-          imgPath={tmdbConfig.backdropPath(detailState.media.backdrop_path)}
-        />
+      {/* 배경 이미지  */}
+      {media.backdrop_path && (
+        <ImageHeader imgPath={tmdbConfig.backdropPath(media.backdrop_path)} />
       )}
-      {/* {detailState.media.poster_path && (
+      {/* {media.poster_path && (
         <ImageHeader
-          imgPath={tmdbConfig.backdropPath(detailState.media.poster_path)}
+          imgPath={tmdbConfig.backdropPath(media.poster_path)}
         />
       )} */}
-      {/* be in a backdrop_path or poster_path  */}
+      {/* 배경 이미지  */}
 
       <Box
         sx={{ color: "primary.contrastText", ...uiConfigs.style.mainContent }}
       >
-        {/* media content */}
+        {/* 미디어 컨텐츠 */}
         <Box sx={{ marginTop: { xs: "-10rem", md: "-15rem", lg: "-30rem" } }}>
           <Box
             sx={{ display: "flex", flexDirection: { md: "row", xs: "column" } }}
           >
-            {/* poster */}
+            {/* 영화 포스터 */}
             <Box
               sx={{
                 width: { xs: "70%", sm: "50%", md: "40%" },
@@ -182,173 +180,175 @@ const MediaDetail = () => {
               }}
             >
               {/* be in a backdrop_path or poster_path  */}
-
-              {detailState.media.poster_path && (
+              {media.poster_path && (
                 <Box
                   sx={{
                     paddingTop: "140%",
                     ...uiConfigs.style.backgroundImage(
-                      tmdbConfig.posterPath(detailState.media.poster_path)
+                      tmdbConfig.posterPath(media.poster_path)
                     ),
                   }}
                 />
               )}
               {/* 
-              {detailState.media.backdrop_path && (
+              {media.backdrop_path && (
                 <Box
                   sx={{
                     paddingTop: "140%",
                     ...uiConfigs.style.backgroundImage(
-                      tmdbConfig.posterPath(detailState.media.backdrop_path)
+                      tmdbConfig.posterPath(media.backdrop_path)
                     ),
                   }}
                 />
               )} */}
               {/* be in a backdrop_path or poster_path  */}
             </Box>
-            {/* poster */}
-          </Box>
-          {/* media info */}
-          <Box sx={{ width: { xs: "100%", md: "60%" }, color: "text.primary" }}>
-            <Stack spacing={5}>
-              {/* title */}
-              <Typography
-                variant="h4"
-                fontSize={{ xs: "2rem", md: "2rem", lg: "4rem" }}
-                fontWeight="700"
-                sx={{ ...uiConfigs.style.typoLines(2, "left") }}
-              >
-                {`${detailState.media.title || detailState.media.name} ${
-                  mediaType === tmdbConfig.mediaType.movie
-                    ? detailState.media.release_date?.split("-")[0]
-                    : detailState.media.first_air_date?.split("-")[0]
-                }`}
-              </Typography>
-              {/* title */}
-              {/* rate and genres */}
-              <Stack direction="row" spacing={1} alignItems="center">
-                {/* rate */}
-                <CircularRate value={detailState.media.vote_average} />
-                {/* rate */}
-                <Divider orientation="vertical" />
-                {/* genres */}
-                {detailState.genres.map(
-                  (
-                    { id, name }: { id: number; name: string },
-                    index: number
-                  ) => (
-                    <Chip
-                      label={name}
-                      variant="filled"
-                      color="primary"
-                      key={index}
-                    />
-                  )
-                )}
-                {/* genres */}
-              </Stack>
-              {/* rate and genres */}
+            {/* 영화 포스터 */}
 
-              {/* overview */}
-              <Typography
-                variant="body1"
-                sx={{ ...uiConfigs.style.typoLines(5) }}
-              >
-                {detailState.media.overview}
-              </Typography>
-              {/* overview */}
-
-              {/* buttons */}
-              <Stack direction="row" spacing={1}>
-                <LoadingButton
-                  variant="text"
-                  sx={{
-                    width: "max-content",
-                    "& .MuiButon-starIcon": { marginRight: "0" },
-                  }}
-                  size="large"
-                  startIcon={
-                    detailState.isFavorite ? (
-                      <FavoriteIcon />
-                    ) : (
-                      <FavoriteBorderOutlinedIcon />
-                    )
-                  }
-                  loadingPosition="start"
-                  loading={detailState.onRequest}
-                  onClick={onFavoriteClick}
-                />
-                <Button
-                  variant="contained"
-                  sx={{ width: "max-content" }}
-                  size="large"
-                  startIcon={<PlayArrowIcon />}
-                  onClick={() => videoRef.current?.scrollIntoView()}
+            {/* 미디어 정보 */}
+            <Box
+              sx={{ width: { xs: "100%", md: "60%" }, color: "text.primary" }}
+            >
+              <Stack spacing={5}>
+                {/* 영화 제목 */}
+                <Typography
+                  variant="h4"
+                  fontSize={{ xs: "2rem", md: "2rem", lg: "4rem" }}
+                  fontWeight="700"
+                  sx={{ ...uiConfigs.style.typoLines(2, "left") }}
                 >
-                  시청하기
-                </Button>
+                  {`${media.title || media.name} ${
+                    mediaType === tmdbConfig.mediaType.movie
+                      ? media.release_date?.split("-")[0]
+                      : media.first_air_date?.split("-")[0]
+                  }`}
+                </Typography>
+                {/* 영화 제목 */}
+
+                {/* 점수, 장르 */}
+                <Stack direction="row" spacing={1} alignItems="center">
+                  {/* 점수 */}
+                  <CircularRate value={media.vote_average} />
+                  {/* 점수 */}
+                  <Divider orientation="vertical" />
+                  {/* 장르 */}
+                  {genres.map(
+                    (
+                      { id, name }: { id: number; name: string },
+                      index: number
+                    ) => (
+                      <Chip
+                        label={name}
+                        variant="filled"
+                        color="primary"
+                        key={index}
+                      />
+                    )
+                  )}
+                  {/* 장르 */}
+                </Stack>
+                {/* 점수, 장르 */}
+
+                {/* 줄거리 */}
+                <Typography
+                  variant="body1"
+                  sx={{ ...uiConfigs.style.typoLines(5) }}
+                >
+                  {media.overview}
+                </Typography>
+                {/* 줄거리 */}
+
+                {/* 버튼 - 좋아요, 시청하기 */}
+                <Stack direction="row" spacing={1}>
+                  <LoadingButton
+                    variant="text"
+                    sx={{
+                      width: "max-content",
+                      "& .MuiButon-starIcon": { marginRight: "0" },
+                    }}
+                    size="large"
+                    startIcon={
+                      isFavorite ? (
+                        <FavoriteIcon />
+                      ) : (
+                        <FavoriteBorderOutlinedIcon />
+                      )
+                    }
+                    loadingPosition="start"
+                    loading={onRequest}
+                    onClick={onFavoriteClick}
+                  />
+                  <Button
+                    variant="contained"
+                    sx={{ width: "max-content" }}
+                    size="large"
+                    startIcon={<PlayArrowIcon />}
+                    onClick={() => videoRef.current?.scrollIntoView()}
+                  >
+                    시청하기
+                  </Button>
+                </Stack>
+                {/* 버튼 - 좋아요, 시청하기  */}
+
+                {/* 출연 배우 */}
+                <Container header="출연 배우">
+                  <CastSlide casts={media.credits?.cast} />
+                </Container>
+                {/* 출연 배우 */}
               </Stack>
-              {/* buttons */}
-
-              {/* cast */}
-              <Container header="Cast">
-                {/* <CastSlide casts={detailState.media.credits.cast} /> */}
-              </Container>
-              {/* cast */}
-            </Stack>
+            </Box>
+            {/* 미디어 정보 */}
           </Box>
-          {/* media info */}
         </Box>
-        {/* media content */}
+        {/* 미디어 컨텐츠 */}
 
-        {/* media videos */}
-        <div ref={videoRef}>
-          <Container header="Videos"></Container>
-        </div>
-        {/* media videos */}
+        {/* 미디어 비디오 */}
+        {media.videos?.results.length > 0 && (
+          <div ref={videoRef}>
+            <Container header="비디오">
+              <MediaVideoSlide videos={media.videos?.results.splice(0, 5)} />
+            </Container>
+          </div>
+        )}
+        {/* 미디어 비디오 */}
 
         {/* media backdrop */}
-        {detailState.media.images?.backdrops.length > 0 && (
-          <Container header="backdrops">
-            <BackdropSlide backdrops={detailState.media.images.backdrops} />
+        {media.images?.backdrops.length > 0 && (
+          <Container header="배경 사진">
+            <BackdropSlide backdrops={media.images.backdrops} />
           </Container>
         )}
         {/* media backdrop */}
 
-        {/* media posters */}
-        {detailState.media.images?.posters?.length > 0 && (
-          <Container header="poster">
-            <PosterSlide posters={detailState.media.images.posters} />
+        {/* 미디어 포스터 */}
+        {media.images?.posters?.length > 0 && (
+          <Container header="포스터">
+            <PosterSlide posters={media.images.posters} />
           </Container>
         )}
-        {/* media poster */}
+        {/* 미디어 포스터 */}
 
         {/* media reviews */}
-        {/* 
         <MediaReview
-          media={detailState.media}
-          reviews={detailState.media.reviews}
+          media={media}
+          reviews={media.reviews}
           mediaType={"movie"}
-        /> */}
-
+        />
         {/* media reviews */}
 
-        {/* media recommendation */}
-        <Container header="추천 영화">
-          {detailState.media.recommend?.length > 0 && (
-            <RecommendSlide
-              medias={detailState.media.recommend}
-              mediaType={mediaType!}
-            />
+        {/* 추천 미디어 */}
+        <Container header="추천 영상">
+          {media.recommend?.length > 0 && (
+            <RecommendSlide medias={media.recommend} mediaType={mediaType!} />
           )}
-          {detailState.media.recommend?.length === 0 && (
+          {media.recommend?.length === 0 && (
             <MediaSlide
               mediaType={mediaType!}
               mediaCategory={tmdbConfig.mediaCategory.top_rated}
             />
           )}
         </Container>
-        {/* media recommendation */}
+        {/* 추천 미디어 */}
       </Box>
     </>
   ) : null;
