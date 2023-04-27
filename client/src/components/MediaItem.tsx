@@ -14,6 +14,13 @@ import uiConfigs from "configs/ui.config";
 import favoriteUtils from "utils/favorite.utils";
 import CircularRate from "./CircularRate";
 
+const STATE_NAMES = {
+  title: "title",
+  posterPath: "posterPath",
+  releaseDate: "releaseDate",
+  rate: "rate",
+} as const;
+
 const MediaItem = ({ media, mediaType }: React.PropsWithChildren<Props>) => {
   const { listFavorites } = useSelector((state: RootState) => state.user);
 
@@ -27,12 +34,12 @@ const MediaItem = ({ media, mediaType }: React.PropsWithChildren<Props>) => {
 
   React.useEffect(() => {
     setMediaState({
-      name: "title",
+      name: STATE_NAMES.title,
       value: media.title || media.name || media.mediaTitle,
     });
 
     setMediaState({
-      name: "posterPath",
+      name: STATE_NAMES.posterPath,
       value: tmdbConfig.posterPath(
         (media.poster_path ||
           media.backdrop_path ||
@@ -43,17 +50,17 @@ const MediaItem = ({ media, mediaType }: React.PropsWithChildren<Props>) => {
 
     if (mediaType === tmdbConfig.mediaType.movie) {
       setMediaState({
-        name: "releaseDate",
+        name: STATE_NAMES.releaseDate,
         value: media.release_date && media.release_date.split("-")[0],
       });
     } else {
       setMediaState({
-        name: "first_air_date",
+        name: STATE_NAMES.releaseDate,
         value: media.first_air_date && media.first_air_date?.split("-")[0],
       });
     }
     setMediaState({
-      name: "rate",
+      name: STATE_NAMES.rate,
       value: media.vote_average || media.mediaRate,
     });
   }, [media, mediaType]);

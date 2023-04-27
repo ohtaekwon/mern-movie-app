@@ -19,8 +19,16 @@ import { LoadingButton } from "@mui/lab";
 import Container from "components/Container";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { Review } from "types/index.types";
+import TextAvatar from "./TextAvatar";
 
-const ReviewItem = ({ review, onRemoved }: { review: any; onRemoved: any }) => {
+const ReviewItem = ({
+  review,
+  onRemoved,
+}: {
+  review: Review;
+  onRemoved: (id: string | number) => void;
+}) => {
   const { user } = useSelector((state: RootState) => state.user);
   const [onRequest, setOnRequest] = React.useState<boolean>(false);
 
@@ -28,7 +36,11 @@ const ReviewItem = ({ review, onRemoved }: { review: any; onRemoved: any }) => {
     if (onRequest) return;
     setOnRequest(true);
 
-    // const {response, error}=await reviewApis.remove({})
+    const { response, error } = await reviewApis.remove({
+      reviewId: review.id,
+    });
+    if (error) toast.error(error.message);
+    if (response) onRemoved(review.id);
   };
 
   return (
@@ -42,9 +54,9 @@ const ReviewItem = ({ review, onRemoved }: { review: any; onRemoved: any }) => {
       }}
     >
       <Stack direction="row" spacing={2}>
-        {/* avatar */}
-        {/* <TextAvatar text={review.user?.displayName} /> */}
-        {/* avatar */}
+        {/* 유저 아바타 */}
+        <TextAvatar text={review.user?.displayName} />
+        {/* 유저 아바타 */}
         <Stack spacing={2} flexGrow={1}>
           <Stack spacing={1}>
             <Typography variant="h6" fontWeight="700">
@@ -71,7 +83,7 @@ const ReviewItem = ({ review, onRemoved }: { review: any; onRemoved: any }) => {
                 width: "max-content",
               }}
             >
-              remove
+              삭제하기
             </LoadingButton>
           )}
         </Stack>
@@ -80,16 +92,27 @@ const ReviewItem = ({ review, onRemoved }: { review: any; onRemoved: any }) => {
   );
 };
 
+const STATE_NAMES = {
+  listReviews: "listReviews",
+  filteredReviews: "filteredReviews",
+  page: "page",
+  onRequest: "onRequest",
+  content: "content",
+  reviewCount: "reviewCount",
+} as const;
+
 const MediaReview = ({
   reviews,
   media,
   mediaType,
 }: React.PropsWithChildren<Props>) => {
   const { user } = useSelector((state: RootState) => state.user);
-
-  const [reviewState, setReviewState] = useMultipleState({
-    listReviews: [],
-    filteredReviews: [],
+  const [
+    { listReviews, filteredReviews, page, onRequest, content, reviewCount },
+    setReviewState,
+  ] = useMultipleState({
+    listReviews: [] as Review[],
+    filteredReviews: [] as Review[],
     page: 1,
     onRequest: false,
     content: "",
@@ -98,30 +121,35 @@ const MediaReview = ({
 
   const skip = 4;
 
-  React.useEffect(() => {
+  const onUnmount = React.useCallback((reviews: any) => {
+    const count = reviews?.length;
     setReviewState({
-      name: "listReviews",
+      name: STATE_NAMES.listReviews,
       value: reviews,
     });
     setReviewState({
-      name: "filteredReviews",
+      name: STATE_NAMES.filteredReviews,
       value: reviews?.splice(0, skip),
     });
     setReviewState({
-      name: "reviewCount",
-      value: reviews?.length,
+      name: STATE_NAMES.reviewCount,
+      value: count,
     });
+  }, []);
+
+  React.useEffect(() => {
+    onUnmount(reviews);
   }, [reviews]);
 
   const onAddReview = async () => {
-    if (reviewState.onRequest) return;
+    if (onRequest) return;
     setReviewState({
-      name: "onRequest",
+      name: STATE_NAMES.onRequest,
       value: true,
     });
 
     const body = {
-      content: reviewState.content as string,
+      content: content as string,
       mediaId: media.id,
       mediaType,
       mediaTitle: (media.title || media.name)!,
@@ -131,7 +159,7 @@ const MediaReview = ({
     const { response, error } = await reviewApis.add(body);
 
     setReviewState({
-      name: "onRequest",
+      name: STATE_NAMES.onRequest,
       value: false,
     });
 
@@ -141,71 +169,68 @@ const MediaReview = ({
     }
 
     setReviewState({
-      name: "filteredReviews",
-      value: [...reviewState.filteredReviews, response],
+      name: STATE_NAMES.filteredReviews,
+      value: [...filteredReviews, response],
     });
 
     setReviewState({
-      name: "reviewCount",
-      value: reviewState.reviewCount + 1,
+      name: STATE_NAMES.reviewCount,
+      value: reviewCount + 1,
     });
     setReviewState({
-      name: "content",
+      name: STATE_NAMES.content,
       value: "",
     });
   };
 
   const onLoadMore = () => {
-    const newPage = reviewState.page * skip;
-    const snapshot = [...reviewState.listReviews]?.splice(newPage, skip);
+    const newPage = page * skip;
+    const snapshot = [...listReviews]?.splice(newPage, skip);
     setReviewState({
       name: "filteredReviews",
-      value: [...reviewState.filteredReviews, ...snapshot],
+      value: [...filteredReviews, ...snapshot],
     });
     setReviewState({
       name: "page",
-      value: reviewState.page + 1,
+      value: page + 1,
     });
   };
 
-  const onRemoved = (id: number) => {
-    const newPage = reviewState.page * skip;
+  const onRemoved = (id: string | number) => {
+    const newPage = page * skip;
 
-    const targetIndex = reviewState.listReview.findIndex(
-      (e: any) => e.id === id
-    );
-    const newListReviews = [...reviewState.listReviews].filter(
-      (e) => e.id !== id
-    );
+    const targetIndex = listReviews?.findIndex((e: Review) => e.id === id);
+    const newListReviews = [...listReviews].filter((e) => e.id !== id);
 
-    if (targetIndex < -1) {
+    if (targetIndex !== -1) {
       setReviewState({
-        name: "filteredReviews",
-        value: [...reviewState.filteredReviews].filter((e) => e.id !== id),
-      });
-    } else {
-      setReviewState({
-        name: "listReviews",
+        name: STATE_NAMES.listReviews,
         value: newListReviews,
       });
       setReviewState({
-        name: "filteredReviews",
+        name: STATE_NAMES.filteredReviews,
         value: [...newListReviews].splice(0, newPage),
+      });
+    } else {
+      setReviewState({
+        name: STATE_NAMES.filteredReviews,
+        value: [...filteredReviews].filter((e) => e.id !== id),
       });
     }
 
     setReviewState({
       name: "reviewCount",
-      value: reviewState.reviewCount - 1,
+      value: reviewCount - 1,
     });
 
     toast.success("리뷰 삭제를 성공하였습니다.");
   };
+
   return (
     <>
-      <Container header={`Reviews (${reviewState.reviewCount})`}>
+      <Container header={`댓글 (${reviewCount})`}>
         <Stack spacing={4} marginBottom={2}>
-          {reviewState.filteredReviews?.map((item: any) =>
+          {filteredReviews?.map((item: Review) =>
             item.user ? (
               <Box key={item.id}>
                 <ReviewItem review={item} onRemoved={onRemoved} />
@@ -217,8 +242,7 @@ const MediaReview = ({
               </Box>
             ) : null
           )}
-          {reviewState.filteredReviews?.length <
-            reviewState.listReviews?.length && (
+          {filteredReviews?.length < listReviews?.length && (
             <Button onClick={onLoadMore}>load more</Button>
           )}
         </Stack>
@@ -226,16 +250,19 @@ const MediaReview = ({
           <>
             <Divider />
             <Stack direction="row" spacing={2}>
-              {/* <TextAvatar text={user.displayName} /> */}
+              {/* 유저 아바타 */}
+              <TextAvatar text={user.displayName} />
+              {/* 유저 아바타 */}
+
               <Stack spacing={2} flexGrow={1}>
                 <Typography variant="h6" fontWeight="700">
                   {user.displayName}
                 </Typography>
                 <TextField
-                  value={reviewState.content}
+                  value={content}
                   onChange={(e) =>
                     setReviewState({
-                      name: "content",
+                      name: STATE_NAMES.content,
                       value: e.target.value,
                     })
                   }
@@ -250,10 +277,10 @@ const MediaReview = ({
                   sx={{ width: "max-content" }}
                   startIcon={<SendOutlinedIcon />}
                   loadingPosition="start"
-                  loading={reviewState.onRequest}
+                  loading={onRequest}
                   onClick={onAddReview}
                 >
-                  post
+                  확인
                 </LoadingButton>
               </Stack>
             </Stack>
