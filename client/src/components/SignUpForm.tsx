@@ -42,7 +42,6 @@ const SignUpForm = ({ switchAuthState }: React.PropsWithChildren<Props>) => {
       setIsLoadingRequest(true);
       console.log("loading...");
       const { response, error } = await userApis.signUp(values);
-      console.log("response는", response);
       setIsLoadingRequest(false);
 
       if (response) {

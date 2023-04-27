@@ -15,7 +15,7 @@ const reviewApis = {
     mediaPoster,
     content,
   }: {
-    mediaId: string;
+    mediaId: number;
     mediaType: "movie" | "tv";
     mediaTitle: string;
     mediaPoster: string;

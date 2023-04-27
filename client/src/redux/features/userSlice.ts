@@ -18,10 +18,12 @@ import { createSlice } from "@reduxjs/toolkit";
  */
 
 type UserInfo = {
+  id: string;
   username: string;
   displayName: string;
-  password: string;
-  salt: string;
+  token: string;
+  _id?: string;
+  createdAt?: string;
 };
 
 const initialState = {
@@ -30,7 +32,7 @@ const initialState = {
 } as {
   user: UserInfo | null;
   listFavorites: {
-    mediaId: string;
+    mediaId: number;
   }[];
 };
 
@@ -40,13 +42,14 @@ export const userSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       if (action.payload === null) {
-        localStorage.removeItem("actkn");
+        localStorage.removeItem("tkflix");
       } else {
         if (action.payload.token) {
           const userToken = action.payload.token;
-          localStorage.setItem("actkn", userToken);
+          localStorage.setItem("tkflix", userToken);
         }
       }
+      // console.log("action", action.payload);
       state.user = action.payload;
     },
     setListFavorites: (state, action) => {
@@ -74,3 +77,20 @@ export const { setUser, setListFavorites, addFavorite, removeFavorites } =
  *@description slice에서 생성된 Reducer함수들을 외부에서 사용하도록 내보낸다. Redux의 Store에서 사용하도록 한다.
  */
 export default userSlice.reducer;
+
+/**add response
+ * 
+ * 
+ * 
+ * {
+    "user": "643e369b6e1449eab6171f77",
+    "mediaType": "movie",
+    "mediaId": "640146",
+    "mediaTitle": "앤트맨과 와스프: 퀀텀매니아",
+    "mediaPoster": "/cw6jBnTauNmEEIIXcoNEyoQItG7.jpg",
+    "mediaRate": 6.516,
+    "createdAt": "2023-04-26T16:59:16.388Z",
+    "updatedAt": "2023-04-26T16:59:16.388Z",
+    "id": "6449586455717f627bb533dd"
+}
+ */

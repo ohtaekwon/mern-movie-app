@@ -8,7 +8,7 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
-import useStateReducer from "hooks/useStateReducer";
+import useMultipleState from "hooks/useMultipleState";
 import tmdbConfig from "lib/api/config/tmdb.config";
 import uiConfigs from "configs/ui.config";
 import favoriteUtils from "utils/favorite.utils";
@@ -17,7 +17,7 @@ import CircularRate from "./CircularRate";
 const MediaItem = ({ media, mediaType }: React.PropsWithChildren<Props>) => {
   const { listFavorites } = useSelector((state: RootState) => state.user);
 
-  const [mediaState, setMediaState] = useStateReducer({
+  const [mediaState, setMediaState] = useMultipleState({
     title: "",
     posterPath: "",
     releaseDate: "",

@@ -15,9 +15,9 @@ export const handleError = (error: unknown): ApiError => {
     errorCode = response ? response.status : 500;
   } else {
     console.error(error);
-    errorMsg = "예상치 못한 에러";
+    errorMsg = "예상치 못한 에러입니다.";
     errorCode = 500;
   }
-  console.error("An error occurred: ", errorMsg);
+  console.error("응답에서 에러가 발생하였습니다. : ", errorMsg);
   return { code: errorCode, message: errorMsg };
 };
