@@ -11,7 +11,7 @@ const addFavorite = async (req, res) => {
   try {
     const {
       user: { id },
-      body: { mediaId },
+      body: { mediaId, mediaPoster, mediaRate, mediaTitle, mediaType },
     } = req;
 
     const isFavorite = await favoriteModel.findOne({
@@ -22,8 +22,12 @@ const addFavorite = async (req, res) => {
     if (isFavorite) return responseHandler.ok(res, isFavorite);
 
     const favorite = new favoriteModel({
-      ...body,
       user: id,
+      mediaId,
+      mediaPoster,
+      mediaRate,
+      mediaTitle,
+      mediaType,
     });
     await favorite.save();
     responseHandler.created(res, favorite);
