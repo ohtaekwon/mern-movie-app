@@ -6,6 +6,9 @@ const get = async (url) => {
       Accept: "application/json",
       "Accept-Encoding": "identity",
     },
+    params: {
+      language: "ko-KR",
+    },
   });
   return response.data;
 };
