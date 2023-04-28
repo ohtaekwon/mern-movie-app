@@ -23,10 +23,10 @@ privateClient.interceptors.request.use(
         Authorization: `Bearer ${localStorage.getItem("tkflix")}`,
       },
     };
-  },
-  (error) => {
-    return Promise.reject(error);
   }
+  // (error) => {
+  //   return Promise.reject(error);
+  // }
 );
 
 /**
@@ -42,7 +42,9 @@ privateClient.interceptors.response.use(
     return response;
   },
   (error) => {
-    return Promise.reject(error);
+    throw error.response.data;
+
+    // return Promise.reject(error);
   }
 );
 

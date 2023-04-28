@@ -27,7 +27,7 @@ const mediaApiRoutes = {
   }: {
     mediaType: "movie" | "tv" | "people";
     query: string;
-    page: string;
+    page: number;
   }) => `${mediaType}/search?query=${query}&page=${page}`,
 };
 
@@ -79,10 +79,10 @@ const mediaApis = {
   }: {
     mediaType: "movie" | "tv" | "people";
     query: string;
-    page: string;
+    page: number;
   }) => {
     try {
-      const response = await publicClient.get(
+      const response: any = await publicClient.get(
         mediaApiRoutes.search({ mediaType, query, page })
       );
       return { response };

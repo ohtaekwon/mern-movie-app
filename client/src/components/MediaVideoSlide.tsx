@@ -3,12 +3,12 @@ import { Box } from "@mui/material";
 import tmdbConfig from "lib/api/config/tmdb.config";
 import { SwiperSlide } from "swiper/react";
 import NavigationSwiper from "./NavigationSwiper";
+import { Video } from "types/index.types";
 
-const MediaVideo = ({ video }: { video: any }) => {
+const MediaVideo = ({ video }: { video: Video }) => {
   const iframeRef = React.useRef<HTMLIFrameElement>(null);
 
   React.useEffect(() => {
-    console.log("iframe");
     const newHeight = (iframeRef.current?.offsetWidth! * 9) / 16 + "px";
     iframeRef.current?.setAttribute("height", newHeight);
   }, [video]);
@@ -27,13 +27,11 @@ const MediaVideo = ({ video }: { video: any }) => {
   );
 };
 
-const MediaVideoSlide = ({ videos }: { videos: any }) => {
-  console.log({ videos });
-
+const MediaVideoSlide = ({ videos }: { videos: Video[] }) => {
   return (
     <>
       <NavigationSwiper>
-        {videos.map((video: any, index: number) => (
+        {videos.map((video: Video, index: number) => (
           <SwiperSlide key={index}>
             <MediaVideo video={video} />
           </SwiperSlide>
