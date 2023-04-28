@@ -1,3 +1,4 @@
+import ProtectedPage from "components/ProtectedPage";
 import FavoriteList from "pages/FavoriteList";
 import Home from "pages/Home";
 import MediaDetail from "pages/MediaDetail";
@@ -9,11 +10,11 @@ import ReviewList from "pages/ReviewList";
 
 export const pageRouters = {
   home: "/",
-  mediaList: (type: "tv" | "movie" | "person") => `/${type}`,
-  mediaDetail: (type: "tv" | "movie" | "person", id: string) =>
+  mediaList: (type: "tv" | "movie") => `/${type}`,
+  mediaDetail: (type: "tv" | "movie" | "people", id: number) =>
     `/${type}/${id}`,
   mediaSearch: "/search",
-  person: (id: string) => `/person/${id}`,
+  person: (id: number) => `/person/${id}`,
   favoriteList: `/favorites`,
   reviewList: `/reviews`,
   passwordUpdate: "password-update",
@@ -37,17 +38,29 @@ const routes = [
   },
   {
     path: "/password-update",
-    element: <PasswordUpdate />,
+    element: (
+      <ProtectedPage>
+        <PasswordUpdate />
+      </ProtectedPage>
+    ),
     state: "password.update",
   },
   {
     path: "/favorites",
-    element: <FavoriteList />,
+    element: (
+      <ProtectedPage>
+        <FavoriteList />
+      </ProtectedPage>
+    ),
     state: "favorites",
   },
   {
     path: "/reviews",
-    element: <ReviewList />,
+    element: (
+      <ProtectedPage>
+        <ReviewList />
+      </ProtectedPage>
+    ),
     state: "reviews",
   },
   {
