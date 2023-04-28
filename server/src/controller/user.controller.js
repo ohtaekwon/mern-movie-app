@@ -1,6 +1,7 @@
 import userModel from "../models/user.model.js";
 import jsonwebtoken from "jsonwebtoken";
 import responseHandler from "../handlers/response.handler.js";
+import "dotenv/config";
 
 const signUp = async (req, res) => {
   try {
@@ -14,10 +15,12 @@ const signUp = async (req, res) => {
       return responseHandler.badRequest(res, "username already used");
     }
     const user = new userModel();
+
+    user.displayName = displayName;
     user.username = username;
     user.setPassword(password);
 
-    await user.saver();
+    await user.save();
 
     const token = jsonwebtoken.sign(
       { data: user.id },
