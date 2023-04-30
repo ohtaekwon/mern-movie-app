@@ -22,11 +22,17 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Review } from "types/index.types";
 import TextAvatar from "./TextAvatar";
 
+/**
+ * todo
+ * Reveiew type settings
+ * @param param0
+ * @returns
+ */
 const ReviewItem = ({
   review,
   onRemoved,
 }: {
-  review: Review;
+  review: any;
   onRemoved: (id: string | number) => void;
 }) => {
   const { user } = useSelector((state: RootState) => state.user);
@@ -100,6 +106,13 @@ const STATE_NAMES = {
   content: "content",
   reviewCount: "reviewCount",
 } as const;
+
+/**
+ * todo
+ * enum으로 state_nanmes 설정
+ * @param param0
+ * @returns
+ */
 
 const MediaReview = ({
   reviews,

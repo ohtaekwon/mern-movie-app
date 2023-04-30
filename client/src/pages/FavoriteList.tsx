@@ -1,18 +1,62 @@
 import React from "react";
-
-import { Box, Button, Grid } from "@mui/material";
-import useMultipleState from "hooks/useMultipleState";
+import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { setGlobalLoading } from "redux/features/globalLoadingSlice";
-import favoriteApis from "lib/api/modules/favorite.api";
-import { toast } from "react-toastify";
+import { removeFavorites } from "redux/features/userSlice";
 
-// const STATE_NAMES = {
-//   medias: "medias",
-//   filteredMedias: "filteredMedias",
-//   page: "page",
-//   count: "count",
-// } as const;
+import useMultipleState from "hooks/useMultipleState";
+import favoriteApis from "lib/api/modules/favorite.api";
+
+import { LoadingButton } from "@mui/lab";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Box, Button, Grid } from "@mui/material";
+
+import MediaItem from "components/MediaItem";
+import uiConfigs from "configs/ui.config";
+import Container from "components/Container";
+
+const FavoriteItem = ({
+  media,
+  onRemoved,
+}: {
+  media: any;
+  onRemoved: (id: number) => void;
+}) => {
+  const dispatch = useDispatch();
+  const [onRequest, setOnRequest] = React.useState(false);
+
+  const onRemove = async () => {
+    if (onRequest) return;
+    setOnRequest(true);
+    const { response, error } = await favoriteApis.remove({
+      favoriteId: media.id,
+    });
+    setOnRequest(false);
+    if (error) toast.error(error.message);
+    if (response) {
+      toast.success("좋아요를 취소가 성공하였습니다.");
+      dispatch(removeFavorites({ mediaId: media.mediaId }));
+      onRemoved(media.id);
+    }
+  };
+
+  return (
+    <>
+      <MediaItem media={media} mediaType={media.mediaType} />
+      <LoadingButton
+        fullWidth
+        variant="contained"
+        sx={{ marginTop: 2 }}
+        startIcon={<DeleteIcon />}
+        loadingPosition="start"
+        loading={onRequest}
+        onClick={onRemove}
+      >
+        취소하기
+      </LoadingButton>
+    </>
+  );
+};
 
 enum STATE_NAMES {
   medias = "medias",
@@ -60,6 +104,31 @@ const FavoriteList = () => {
     setFavoriteState({ name: STATE_NAMES.page, value: page + 1 });
   };
 
-  return <div>FavoriteList</div>;
+  const onRemoved = (id: number) => {
+    const newMedias = [...medias].filter((e) => e.id !== id);
+    setFavoriteState({ name: STATE_NAMES.medias, value: newMedias });
+    setFavoriteState({
+      name: STATE_NAMES.filteredMedias,
+      value: [...newMedias].splice(0, page * skip),
+    });
+    setFavoriteState({ name: STATE_NAMES.count, value: count - 1 });
+  };
+
+  return (
+    <Box sx={{ ...uiConfigs.style.mainContent }}>
+      <Container header={`좋아요 갯수 (${count})`}>
+        <Grid container spacing={1} sx={{ marginRight: "-8px!important" }}>
+          {filteredMedias.map((media: any, index: number) => (
+            <Grid item xs={6} sm={4} md={3} key={index}>
+              <FavoriteItem media={media} onRemoved={onRemoved} />
+            </Grid>
+          ))}
+        </Grid>
+        {filteredMedias.length < medias.length && (
+          <Button onClick={onLoadMore}>load more</Button>
+        )}
+      </Container>
+    </Box>
+  );
 };
 export default FavoriteList;
