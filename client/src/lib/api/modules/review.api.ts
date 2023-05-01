@@ -4,7 +4,7 @@ import { handleError } from "../utils/helpers";
 const reviewApiRoutes = {
   list: "reviews",
   add: "reviews",
-  remove: ({ reviewId }: { reviewId: string }) => `reviews/${reviewId}`,
+  remove: ({ reviewId }: { reviewId: number }) => `reviews/${reviewId}`,
 };
 
 const reviewApis = {
@@ -35,7 +35,7 @@ const reviewApis = {
       return { error: { code, message } };
     }
   },
-  remove: async ({ reviewId }: { reviewId: string }) => {
+  remove: async ({ reviewId }: { reviewId: number }) => {
     try {
       const response = await privateClient.delete(
         reviewApiRoutes.remove({ reviewId })
@@ -48,7 +48,7 @@ const reviewApis = {
   },
   getList: async () => {
     try {
-      const response = await privateClient.get(reviewApiRoutes.list);
+      const response: any = await privateClient.get(reviewApiRoutes.list);
       return { response };
     } catch (error) {
       const { code, message } = handleError(error);

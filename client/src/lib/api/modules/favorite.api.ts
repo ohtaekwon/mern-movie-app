@@ -11,7 +11,7 @@ const favoriteApiRoutes = {
 const favoriteApis = {
   getList: async () => {
     try {
-      const response = await privateClient.get(favoriteApiRoutes.list);
+      const response: any = await privateClient.get(favoriteApiRoutes.list);
       return { response };
     } catch (error) {
       const { code, message } = handleError(error);

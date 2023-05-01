@@ -30,7 +30,7 @@ const initialState = {
   user: null,
   listFavorites: [],
 } as {
-  user: UserInfo | null;
+  user: UserInfo | null | any;
   listFavorites: {
     mediaId: number;
   }[];
@@ -49,7 +49,6 @@ export const userSlice = createSlice({
           localStorage.setItem("tkflix", userToken);
         }
       }
-      // console.log("action", action.payload);
       state.user = action.payload;
     },
     setListFavorites: (state, action) => {

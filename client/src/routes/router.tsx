@@ -11,8 +11,7 @@ import ReviewList from "pages/ReviewList";
 export const pageRouters = {
   home: "/",
   mediaList: (type: "tv" | "movie") => `/${type}`,
-  mediaDetail: (type: "tv" | "movie" | "people", id: number) =>
-    `/${type}/${id}`,
+  mediaDetail: (type: "tv" | "movie", id: string | number) => `/${type}/${id}`,
   mediaSearch: "/search",
   person: (id: number) => `/person/${id}`,
   favoriteList: `/favorites`,
