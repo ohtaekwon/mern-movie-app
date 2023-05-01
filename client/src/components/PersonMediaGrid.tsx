@@ -8,6 +8,11 @@ import { toast } from "react-toastify";
 import { Button, Grid } from "@mui/material";
 import MediaItem from "./MediaItem";
 
+/**
+ * todo refactoring
+ *
+ * object -> enumonLoadMore
+ */
 const STATE_NAMES = {
   medias: "medias",
   filteredMedias: "filteredMedias",

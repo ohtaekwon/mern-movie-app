@@ -22,12 +22,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Review } from "types/index.types";
 import TextAvatar from "./TextAvatar";
 
-/**
- * todo
- * Reveiew type settings
- * @param param0
- * @returns
- */
 const ReviewItem = ({
   review,
   onRemoved,
@@ -98,21 +92,14 @@ const ReviewItem = ({
   );
 };
 
-const STATE_NAMES = {
-  listReviews: "listReviews",
-  filteredReviews: "filteredReviews",
-  page: "page",
-  onRequest: "onRequest",
-  content: "content",
-  reviewCount: "reviewCount",
-} as const;
-
-/**
- * todo
- * enum으로 state_nanmes 설정
- * @param param0
- * @returns
- */
+enum STATE_NAMES {
+  listReviews = "listReviews",
+  filteredReviews = "filteredReviews",
+  page = "page",
+  onRequest = "onRequest",
+  content = "content",
+  reviewCount = "reviewCount",
+}
 
 const MediaReview = ({
   reviews,

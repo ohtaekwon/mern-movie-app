@@ -20,7 +20,6 @@ const TextAvatar = ({ text }: { text: string }) => {
     return color;
   };
 
-  // console.log("컬러", stringToColor(text));
   return (
     <Avatar
       sx={{
