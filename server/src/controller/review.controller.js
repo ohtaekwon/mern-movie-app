@@ -41,8 +41,6 @@ const remove = async (req, res) => {
 
     await review.deleteOne();
 
-    // console.log("here", review);
-
     /**
      * @description Method change
      * 기존의 remove()에서 deleteOne()으로 수정
