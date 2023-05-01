@@ -14,28 +14,28 @@ const Home = () => {
         mediaCategory={tmdbConfig.mediaCategory.popular}
       />
       <Box marginTop="-4rem" sx={{ ...uiConfigs.style.mainContent }}>
-        <Container header="popular movies">
+        <Container header="인기 영화">
           <MediaSlide
             mediaType={tmdbConfig.mediaType.movie}
             mediaCategory={tmdbConfig.mediaCategory.popular}
           />
         </Container>
 
-        <Container header="popular series">
+        <Container header="인기 TV 시리즈">
           <MediaSlide
             mediaType={tmdbConfig.mediaType.tv}
             mediaCategory={tmdbConfig.mediaCategory.popular}
           />
         </Container>
 
-        <Container header="top rated movies">
+        <Container header="평점 높은 영화">
           <MediaSlide
             mediaType={tmdbConfig.mediaType.movie}
             mediaCategory={tmdbConfig.mediaCategory.top_rated}
           />
         </Container>
 
-        <Container header="top rated series">
+        <Container header="평점 높은 TV 시리즈">
           <MediaSlide
             mediaType={tmdbConfig.mediaType.tv}
             mediaCategory={tmdbConfig.mediaCategory.top_rated}
