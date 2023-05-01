@@ -1,7 +1,7 @@
 import axios from "axios";
 import queryString from "query-string";
 
-const basePath = "http://127.0.0.1:8000/api/v1/";
+const basePath = process.env.REACT_APP_BASE_PATH;
 const publicClient = axios.create({
   baseURL: basePath,
   paramsSerializer: {
