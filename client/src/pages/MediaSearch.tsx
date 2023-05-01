@@ -13,14 +13,17 @@ import MediaGrid from "components/MediaGrid";
 let timer: NodeJS.Timeout;
 const timeout = 500;
 
+/**
+ * enum으로 수정
+ */
 const mediaTypes = ["movie", "tv", "people"] as const;
-const STATE_NAMES = {
-  query: "query",
-  onSearch: "onSearch",
-  mediaTypes: "mediaType",
-  medias: "medias",
-  page: "page",
-};
+enum STATE_NAMES {
+  query = "query",
+  onSearch = "onSearch",
+  mediaTypes = "mediaType",
+  medias = "medias",
+  page = "page",
+}
 
 const MediaSearch = () => {
   const [{ query, onSearch, mediaType, medias, page }, setSearchState] =
@@ -41,7 +44,6 @@ const MediaSearch = () => {
       page,
     });
 
-    console.log("response", response);
     setSearchState({
       name: STATE_NAMES.onSearch,
       value: false,
@@ -69,6 +71,9 @@ const MediaSearch = () => {
     } else search();
   }, [search, query, mediaType, page]);
 
+  /**
+   * 탭설정 바꿀 시
+   */
   React.useEffect(() => {
     setSearchState({ name: STATE_NAMES.medias, value: [] });
     setSearchState({ name: STATE_NAMES.page, value: 1 });
@@ -80,7 +85,9 @@ const MediaSearch = () => {
 
   const onQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newQuery = e.target.value;
-    console.log(newQuery);
+    /**
+     * debounce
+     */
     clearTimeout(timer);
 
     timer = setTimeout(() => {
@@ -91,7 +98,6 @@ const MediaSearch = () => {
     }, timeout);
   };
 
-  console.log(medias);
   return (
     <>
       <Toolbar />
@@ -137,7 +143,7 @@ const MediaSearch = () => {
                 setSearchState({ name: STATE_NAMES.page, value: page + 1 })
               }
             >
-              load more
+              더보기
             </LoadingButton>
           )}
         </Stack>

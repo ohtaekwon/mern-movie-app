@@ -15,12 +15,12 @@ import tmdbConfig from "lib/api/config/tmdb.config";
 import MediaGrid from "components/MediaGrid";
 import uiConfigs from "configs/ui.config";
 
-const STATE_NAMES = {
-  medias: "medias",
-  mediaLoading: "mediaLoading",
-  currentCategory: "currentCategory",
-  currentPage: "currentPage",
-};
+enum STATE_NAMES {
+  medias = "medias",
+  mediaLoading = "mediaLoading",
+  currentCategory = "currentCategory",
+  currentPage = "currentPage",
+}
 
 export default function MediaList() {
   const { mediaType } = useParams<{ mediaType: "movie" | "tv" }>(); // Parameters info
@@ -73,7 +73,6 @@ export default function MediaList() {
       });
       dispatch(setGlobalLoading(false));
 
-      console.log("미디어 리스트", response);
       if (error) toast.error(error.message);
       if (response) {
         if (currentPage !== 1) {

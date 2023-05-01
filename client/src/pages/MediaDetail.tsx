@@ -30,6 +30,13 @@ import MediaReview from "components/MediaReview";
 import MediaVideoSlide from "components/MediaVideoSlide";
 import CastSlide from "components/CastSlide";
 
+enum STATE_NAMES {
+  media = "media",
+  isFavorite = "isFavorite",
+  onRequest = "onRequest",
+  genres = "genres",
+}
+
 const MediaDetail = () => {
   const { mediaType, mediaId } = useParams<{
     mediaType: "tv" | "movie";
@@ -65,16 +72,13 @@ const MediaDetail = () => {
       dispatch(setGlobalLoading(false));
 
       if (response) {
+        setDetailState({ name: STATE_NAMES.media, value: response });
         setDetailState({
-          name: "media",
-          value: response,
-        });
-        setDetailState({
-          name: "isFavorite",
+          name: STATE_NAMES.isFavorite,
           value: response.isFavorite,
         });
         setDetailState({
-          name: "genres",
+          name: STATE_NAMES.genres,
           value: response.genres.splice(0, 2),
         });
       }
@@ -92,10 +96,7 @@ const MediaDetail = () => {
       onRemoveFavorite();
       return;
     }
-    setDetailState({
-      name: "onRequest",
-      value: true,
-    });
+    setDetailState({ name: STATE_NAMES.onRequest, value: true });
 
     const body = {
       mediaId: media.id as number,
@@ -107,29 +108,20 @@ const MediaDetail = () => {
 
     const { response, error } = await favoriteApis.add(body);
 
-    setDetailState({
-      name: "onRequest",
-      value: false,
-    });
+    setDetailState({ name: STATE_NAMES.onRequest, value: false });
 
     if (error) toast.error(error.message);
     if (response) {
       dispatch(addFavorite(response));
 
-      setDetailState({
-        name: "isFavorite",
-        value: true,
-      });
+      setDetailState({ name: STATE_NAMES.isFavorite, value: true });
       toast.success("좋아하기 추가를 성공하였습니다.");
     }
   };
 
   const onRemoveFavorite = async () => {
     if (onRequest) return;
-    setDetailState({
-      name: "onRequest",
-      value: true,
-    });
+    setDetailState({ name: STATE_NAMES.onRequest, value: true });
 
     const favorite = listFavorites.find(
       (e) => e.mediaId.toString() === media.id.toString()
@@ -140,10 +132,7 @@ const MediaDetail = () => {
       favoriteId: favorite.mediaId,
     });
 
-    setDetailState({
-      name: "onRequest",
-      value: false,
-    });
+    setDetailState({ name: STATE_NAMES.onRequest, value: false });
 
     if (error) toast.error(error.message);
     if (response) {
@@ -328,13 +317,13 @@ const MediaDetail = () => {
         )}
         {/* 미디어 포스터 */}
 
-        {/* media reviews */}
+        {/* 리뷰 작성 */}
         <MediaReview
           media={media}
           reviews={media.reviews}
-          mediaType={"movie"}
+          mediaType={mediaType!}
         />
-        {/* media reviews */}
+        {/* 리뷰 작성 */}
 
         {/* 추천 미디어 */}
         <Container header="추천 영상">
