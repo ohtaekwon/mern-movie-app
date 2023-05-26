@@ -9,7 +9,7 @@ import favoriteApis from "lib/api/modules/favorite.api";
 
 import GlobalLoading from "components/GlobalLoading";
 import Header from "components/Header";
-import AuthModal from "./AuthModal";
+import AuthModal from "components/Auth/AuthModal";
 import { Box } from "@mui/material";
 
 const Layout = () => {

@@ -1,5 +1,4 @@
 import React from "react";
-import { Props } from "./SignUpForm.types";
 import { useDispatch } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -11,7 +10,11 @@ import { setAuthModalOpen } from "redux/features/authModalSlice";
 import { Alert, Box, Button, Stack, TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 
-const SignUpForm = ({ switchAuthState }: React.PropsWithChildren<Props>) => {
+interface Props {
+  switchAuthState: () => void;
+}
+
+const SignUpForm: React.FC<Props> = ({ switchAuthState }) => {
   const dispatch = useDispatch();
 
   const [isLoadingRequest, setIsLoadingRequest] =

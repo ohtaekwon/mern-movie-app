@@ -1,5 +1,4 @@
 import React from "react";
-import { Props } from "./SignInForm.types";
 import { useDispatch } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -10,7 +9,11 @@ import { toast } from "react-toastify";
 import { Alert, Box, Button, Stack, TextField } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 
-const SignInForm = ({ switchAuthState }: React.PropsWithChildren<Props>) => {
+interface Props {
+  switchAuthState: () => void;
+}
+
+const SignInForm: React.FC<Props> = ({ switchAuthState }) => {
   const dispatch = useDispatch();
 
   const [isLoginRequest, setIsLogInRequest] = React.useState<boolean>(false);
