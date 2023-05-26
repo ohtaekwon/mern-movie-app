@@ -27,17 +27,20 @@ const router = express.Router();
 router.post(
   "/signup", // 리소스
   // body("필드", "메시지") 검증 API로 body는 req.body에서 오는 값만 검사한다.
-
-  body("username")
+  body("email")
     .exists()
-    .withMessage("username is required")
+    .withMessage("email is required")
     .isLength({ min: 8 })
-    .withMessage("username minimum 8 characters")
+    .withMessage("email minimum 8 characters")
     .custom(async (value) => {
       const user = await userModel.findOne({ username: value });
       if (user) return Promise.reject("username already used");
     }),
-
+  body("displayName")
+    .exists()
+    .withMessage("displayName is required")
+    .isLength({ min: 1 })
+    .withMessage("displayName minimum 8 characters"),
   body("password")
     .exists()
     .withMessage("password is required")
@@ -54,11 +57,6 @@ router.post(
       }
       return true;
     }),
-  body("displayName")
-    .exists()
-    .withMessage("displayName is required")
-    .isLength({ min: 8 })
-    .withMessage("displayName minimum 8 characters"),
   requestHandler.validate, // Request자체 검증 미들웨어
   userController.signUp
 );
@@ -72,11 +70,11 @@ router.post(
 
 router.post(
   "/signin",
-  body("username")
+  body("email")
     .exists()
-    .withMessage("username is required")
+    .withMessage("email is required")
     .isLength({ min: 8 })
-    .withMessage("username is required"),
+    .withMessage("email is required"),
   body("password")
     .exists()
     .withMessage("password is required")

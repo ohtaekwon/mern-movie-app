@@ -6,10 +6,10 @@ import "dotenv/config";
 const signUp = async (req, res) => {
   try {
     const {
-      body: { username, password, displayName },
+      body: { email, password, displayName },
     } = req;
 
-    const checkUser = await userModel.findOne({ username });
+    const checkUser = await userModel.findOne({ email });
 
     if (checkUser) {
       return responseHandler.badRequest(res, "username already used");
@@ -17,7 +17,7 @@ const signUp = async (req, res) => {
     const user = new userModel();
 
     user.displayName = displayName;
-    user.username = username;
+    user.email = email;
     user.setPassword(password);
 
     await user.save();
@@ -41,12 +41,12 @@ const signUp = async (req, res) => {
 const signIn = async (req, res) => {
   try {
     const {
-      body: { username, password },
+      body: { email, password },
     } = req;
 
     const user = await userModel
-      .findOne({ username })
-      .select("username password salt id displayName");
+      .findOne({ email })
+      .select("email password salt id displayName");
 
     if (!user) return responseHandler.badRequest(res, "User not exist");
 

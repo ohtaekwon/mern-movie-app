@@ -10,17 +10,11 @@ const userApiRoutes = {
 };
 
 const userApis = {
-  signIn: async ({
-    username,
-    password,
-  }: {
-    username: string;
-    password: string;
-  }) => {
+  signIn: async ({ email, password }: { email: string; password: string }) => {
     try {
       console.info(`로그인 요청을 보내는 중입니다.`);
       const response = await publicClient.post(userApiRoutes.signIn, {
-        username,
+        email,
         password,
       });
       return { response };
@@ -30,19 +24,19 @@ const userApis = {
     }
   },
   signUp: async ({
-    username,
+    email,
     password,
     confirmPassword,
     displayName,
   }: {
-    username: string;
+    email: string;
     password: string;
     confirmPassword: string;
     displayName: string;
   }) => {
     try {
       const response = await publicClient.post(userApiRoutes.signUp, {
-        username,
+        email,
         password,
         confirmPassword,
         displayName,

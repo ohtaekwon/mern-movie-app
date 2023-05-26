@@ -5,12 +5,12 @@ import crypto from "crypto";
 /**
  * @description 사용자의 데이터 모델 정의
  * userSchema 객체 안에 사용자 정보 정의
- * 필드 : username, displayName, password, salt(비밀번호 암호화)
+ * 필드 : email, displayName, password, salt(비밀번호 암호화)
  */
 
 const userSchema = new mongoose.Schema(
   {
-    username: {
+    email: {
       type: String,
       required: true,
       unique: true,

@@ -24,11 +24,11 @@ const SignInForm = ({ switchAuthState }: React.PropsWithChildren<Props>) => {
   const signInForm = useFormik({
     // 설정할 초기값
     initialValues: {
+      email: "",
       password: "",
-      username: "",
     },
     validationSchema: Yup.object({
-      username: Yup.string()
+      email: Yup.string()
         .min(8, "아이디는 최소 8글자 이상")
         .required("유저 이름은 필수입니다."),
       password: Yup.string()
@@ -68,23 +68,20 @@ const SignInForm = ({ switchAuthState }: React.PropsWithChildren<Props>) => {
         <Stack spacing={3}>
           <TextField
             type="text"
-            placeholder="username"
-            name="username"
+            placeholder="email을 입력해주세요,"
+            name="email"
             fullWidth
-            value={signInForm.values.username}
+            value={signInForm.values.email}
             onChange={signInForm.handleChange}
             color="success"
             error={
-              signInForm.touched.username &&
-              signInForm.errors.username !== undefined
+              signInForm.touched.email && signInForm.errors.email !== undefined
             }
-            helperText={
-              signInForm.touched.username && signInForm.errors.username
-            }
+            helperText={signInForm.touched.email && signInForm.errors.email}
           />
           <TextField
             type="password"
-            placeholder="password"
+            placeholder="비밀번호를 입력해주세요."
             name="password"
             fullWidth
             value={signInForm.values.password}

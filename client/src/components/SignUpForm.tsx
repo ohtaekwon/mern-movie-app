@@ -20,15 +20,18 @@ const SignUpForm = ({ switchAuthState }: React.PropsWithChildren<Props>) => {
 
   const signUpForm = useFormik({
     initialValues: {
+      email: "",
       password: "",
-      username: "",
       displayName: "",
       confirmPassword: "",
     },
     validationSchema: Yup.object({
-      username: Yup.string()
+      email: Yup.string()
         .min(8, "이름은 최소 8글자 이상입니다.")
         .required("이름은 필수입니다."),
+      displayName: Yup.string()
+        .min(1, "이름은 1글자 이상 8글자 이하이여야 합니다.")
+        .required("이름은 필수 사항입니다."),
       password: Yup.string()
         .min(8, "비밀번호는 8글자 이상입니다.")
         .required("비밀번호는 필수 입니다."),
@@ -61,23 +64,20 @@ const SignUpForm = ({ switchAuthState }: React.PropsWithChildren<Props>) => {
         <Stack spacing={3}>
           <TextField
             type="text"
-            placeholder="username"
-            name="username"
+            placeholder="email을 작성해주세요."
+            name="email"
             fullWidth
-            value={signUpForm.values.username}
+            value={signUpForm.values.email}
             onChange={signUpForm.handleChange}
             color="success"
             error={
-              signUpForm.touched.username &&
-              signUpForm.errors.username !== undefined
+              signUpForm.touched.email && signUpForm.errors.email !== undefined
             }
-            helperText={
-              signUpForm.touched.username && signUpForm.errors.username
-            }
+            helperText={signUpForm.touched.email && signUpForm.errors.email}
           />
           <TextField
             type="text"
-            placeholder="display name"
+            placeholder="이름을 입력해주세요."
             name="displayName"
             fullWidth
             value={signUpForm.values.displayName}
@@ -93,7 +93,7 @@ const SignUpForm = ({ switchAuthState }: React.PropsWithChildren<Props>) => {
           />
           <TextField
             type="password"
-            placeholder="password"
+            placeholder="비밀번호를 입력해주세요."
             name="password"
             fullWidth
             value={signUpForm.values.password}
@@ -109,7 +109,7 @@ const SignUpForm = ({ switchAuthState }: React.PropsWithChildren<Props>) => {
           />
           <TextField
             type="password"
-            placeholder="confirm password"
+            placeholder="비밀번호를 확인을 위해 다시 입력해주세요."
             name="confirmPassword"
             fullWidth
             value={signUpForm.values.confirmPassword}
