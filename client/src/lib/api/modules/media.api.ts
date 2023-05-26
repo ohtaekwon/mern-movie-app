@@ -25,7 +25,7 @@ const mediaApiRoutes = {
     query,
     page,
   }: {
-    mediaType: "movie" | "tv" | "people";
+    mediaType: "movie" | "tv";
     query: string;
     page: number;
   }) => `${mediaType}/search?query=${query}&page=${page}`,
@@ -77,7 +77,7 @@ const mediaApis = {
     query,
     page,
   }: {
-    mediaType: "movie" | "tv" | "people";
+    mediaType: "movie" | "tv";
     query: string;
     page: number;
   }) => {

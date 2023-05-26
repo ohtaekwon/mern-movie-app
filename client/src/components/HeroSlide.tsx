@@ -190,7 +190,7 @@ const HeroSlide = ({
                       to={pageRouters.mediaDetail(mediaType, movie.id)}
                       sx={{ width: "max-content" }}
                     >
-                      watch now
+                      보러가기
                     </Button>
                     {/* buttons */}
                   </Stack>

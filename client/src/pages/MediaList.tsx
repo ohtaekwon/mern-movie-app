@@ -46,7 +46,7 @@ export default function MediaList() {
     "popular",
     "top_rated"
   ];
-  const category = ["popular", "top_rated"];
+  const category = ["popular", "top_rated"] as const;
 
   React.useEffect(() => {
     dispatch(setAppState(mediaType));
@@ -163,7 +163,7 @@ export default function MediaList() {
                 }}
                 onClick={() => onCategoryChange(index)}
               >
-                {cate}
+                {engToKr[cate]}
               </Button>
             ))}
           </Stack>
@@ -182,3 +182,8 @@ export default function MediaList() {
     </>
   );
 }
+
+const engToKr = {
+  popular: "인기순",
+  top_rated: "높은 등급",
+};

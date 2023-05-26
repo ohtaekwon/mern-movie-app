@@ -100,7 +100,8 @@ const MediaSearch = () => {
 
   return (
     <>
-      <Toolbar />
+      {/* <Toolbar /> */}
+      <Box marginTop={30} />
       <Box sx={{ ...uiConfigs.style.mainContent }}>
         <Stack spacing={2}>
           <Stack
