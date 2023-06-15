@@ -14,4 +14,4 @@ const ProtectedPage = ({ children }: { children: React.ReactNode }) => {
   return <>{user ? children : null}</>;
 };
 
-export default ProtectedPage;
+export default ProtectedPage

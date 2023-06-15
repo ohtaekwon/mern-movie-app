@@ -17,8 +17,7 @@ interface Props {
 const SignUpForm: React.FC<Props> = ({ switchAuthState }) => {
   const dispatch = useDispatch();
 
-  const [isLoadingRequest, setIsLoadingRequest] =
-    React.useState<boolean>(false);
+  const [isLoginRequest, setIsLogInRequest] = React.useState<boolean>(false);
   const [errorMessage, setErrorMessage] = React.useState<string | undefined>();
 
   const signUpForm = useFormik({
@@ -45,10 +44,11 @@ const SignUpForm: React.FC<Props> = ({ switchAuthState }) => {
     }),
     onSubmit: async (values) => {
       setErrorMessage(undefined);
-      setIsLoadingRequest(true);
+      setIsLogInRequest(true);
       console.log("loading...");
+
       const { response, error } = await userApis.signUp(values);
-      setIsLoadingRequest(false);
+      setIsLogInRequest(false);
 
       if (response) {
         signUpForm.resetForm();
@@ -135,9 +135,9 @@ const SignUpForm: React.FC<Props> = ({ switchAuthState }) => {
           size="large"
           variant="contained"
           sx={{ marginTop: 4 }}
-          loading={isLoadingRequest}
+          loading={isLoginRequest}
         >
-          Sign Up
+          회원가입
         </LoadingButton>
 
         <Button
@@ -145,7 +145,7 @@ const SignUpForm: React.FC<Props> = ({ switchAuthState }) => {
           sx={{ marginTop: 1 }}
           onClick={() => switchAuthState()}
         >
-          Sign In
+          로그인
         </Button>
 
         {errorMessage && (

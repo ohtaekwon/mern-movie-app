@@ -1,4 +1,5 @@
 import React from "react";
+
 import { useDispatch } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -107,7 +108,7 @@ const SignInForm: React.FC<Props> = ({ switchAuthState }) => {
           sx={{ marginTop: 4 }}
           loading={isLoginRequest}
         >
-          Sign In
+          로그인
         </LoadingButton>
 
         <Button
@@ -115,7 +116,7 @@ const SignInForm: React.FC<Props> = ({ switchAuthState }) => {
           sx={{ marginTop: 1 }}
           onClick={() => switchAuthState()}
         >
-          Sign Up
+          회원가입
         </Button>
 
         {errorMessage && (
